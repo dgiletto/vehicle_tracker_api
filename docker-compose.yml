@@ -1,0 +1,39 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: vehicle-api
+
+    ports:
+      - "5000:5000"
+
+    env_file:
+      - .env
+
+    command: npm run dev
+
+    restart: unless-stopped
+
+    develop:
+      watch:
+        # Sync source changes into the container
+        - action: sync
+          path: ./src
+          target: /app/src
+
+        # Rebuild the image when dependencies change
+        - action: rebuild
+          path: ./package.json
+
+        - action: rebuild
+          path: ./package-lock.json
+
+        # Rebuild if Prisma schema/config changes
+        - action: rebuild
+          path: ./prisma/schema.prisma
+
+        - action: rebuild
+          path: ./prisma.config.ts
+
