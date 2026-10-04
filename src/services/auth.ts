@@ -15,7 +15,7 @@ interface LoginUserData {
 
 class AuthService {
     registerUser = async ({email, password, firstName, lastName}: RegisterUserData) => {
-        const existingEmail = await prisma.user.findFirst({
+        const existingEmail = await prisma.user.findUnique({
             where : { email: email }
         });
 
